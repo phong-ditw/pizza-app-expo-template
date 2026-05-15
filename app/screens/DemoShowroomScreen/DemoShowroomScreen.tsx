@@ -25,7 +25,6 @@ import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 
 import * as Demos from "./demos"
 import { DrawerIconButton } from "./DrawerIconButton"
-import SectionListWithKeyboardAwareScrollView from "./SectionListWithKeyboardAwareScrollView"
 
 const logo = require("@assets/images/logo.png")
 
@@ -240,7 +239,7 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> =
         >
           <DrawerIconButton onPress={toggleDrawer} />
 
-          <SectionListWithKeyboardAwareScrollView
+          <SectionList
             ref={listRef}
             contentContainerStyle={themed($sectionListContentContainer)}
             stickySectionHeadersEnabled={false}
