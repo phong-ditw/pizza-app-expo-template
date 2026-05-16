@@ -1,6 +1,7 @@
 import { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 // eslint-disable-next-line no-restricted-imports
 import { TextInput, TextStyle, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
 
 import { Button } from "@/components/Button"
 import { PressableIcon } from "@/components/Icon"
@@ -9,12 +10,14 @@ import { Text } from "@/components/Text"
 import { TextField, type TextFieldAccessoryProps } from "@/components/TextField"
 import { useAuth } from "@/context/AuthContext"
 import type { AppStackScreenProps } from "@/navigators/navigationTypes"
+import { useStores } from "@/store/useStores"
 import { useAppTheme } from "@/theme/context"
 import type { ThemedStyle } from "@/theme/types"
+import { p } from "@/utils/log"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
-export const LoginScreen: FC<LoginScreenProps> = () => {
+export const LoginScreen: FC<LoginScreenProps> = observer((_) => {
   const authPasswordInput = useRef<TextInput>(null)
 
   const [authPassword, setAuthPassword] = useState("")
@@ -22,6 +25,11 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const { authEmail, setAuthEmail, setAuthToken, validationError } = useAuth()
+  const {
+    appSetting: { appLabel, setAppLabel },
+  } = useStores()
+
+  p("appLabel", appLabel)
 
   const {
     themed,
@@ -51,6 +59,8 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
 
     // We'll mock this with a fake token.
     setAuthToken(String(Date.now()))
+
+    setAppLabel("Pizza App")
   }
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
@@ -75,6 +85,8 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       contentContainerStyle={themed($screenContentContainer)}
       safeAreaEdges={["top", "bottom"]}
     >
+      <Text text={appLabel ?? "----"} size="sm" weight="light" style={themed($hint)} />
+
       <Text testID="login-heading" tx="loginScreen:logIn" preset="heading" style={themed($logIn)} />
       <Text tx="loginScreen:enterDetails" preset="subheading" style={themed($enterDetails)} />
       {attemptsCount > 2 && (
@@ -120,7 +132,7 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       />
     </Screen>
   )
-}
+})
 
 const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   paddingVertical: spacing.xxl,

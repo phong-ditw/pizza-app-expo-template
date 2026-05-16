@@ -17,6 +17,7 @@ import { Text } from "@/components/Text"
 import { useAuth } from "@/context/AuthContext"
 import { isRTL } from "@/i18n"
 import { DemoTabScreenProps } from "@/navigators/navigationTypes"
+import { useStores } from "@/store/useStores"
 import { useAppTheme } from "@/theme/context"
 import { $styles } from "@/theme/styles"
 import type { ThemedStyle } from "@/theme/types"
@@ -36,6 +37,9 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
 ) {
   const { setThemeContextOverride, themeContext, themed } = useAppTheme()
   const { logout } = useAuth()
+  const {
+    appSetting: { setAppLabel },
+  } = useStores()
 
   // @ts-expect-error
   const usingFabric = global.nativeFabricUIManager != null
@@ -70,6 +74,11 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setThemeContextOverride(undefined)
   }, [setThemeContextOverride])
+
+  const onPressLogout = () => {
+    logout()
+    setAppLabel("")
+  }
 
   return (
     <Screen
@@ -146,7 +155,7 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
         <Text style={themed($hint)} tx={`demoDebugScreen:${Platform.OS}ReactotronHint` as const} />
       </View>
       <View style={themed($buttonContainer)}>
-        <Button style={themed($button)} tx="common:logOut" onPress={logout} />
+        <Button style={themed($button)} tx="common:logOut" onPress={onPressLogout} />
       </View>
     </Screen>
   )

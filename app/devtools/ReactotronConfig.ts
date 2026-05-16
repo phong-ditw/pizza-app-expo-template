@@ -5,6 +5,7 @@
  */
 import { Platform, NativeModules } from "react-native"
 import { ArgType } from "reactotron-core-client"
+import { mst } from "reactotron-mst"
 import { ReactotronReactNative } from "reactotron-react-native"
 import mmkvPlugin from "reactotron-react-native-mmkv"
 
@@ -29,6 +30,7 @@ if (Platform.OS !== "web") {
       ignoreUrls: /symbolicate/,
     },
   })
+  reactotron.use(mst())
 }
 
 /**
